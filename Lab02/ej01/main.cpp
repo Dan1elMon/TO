@@ -6,7 +6,7 @@
 
 using namespace std;
 
-// Clase que se encarga de analizar la operación matemática
+// clase para analizar la operación matemática
 class Analizador {
 public:
     // Método que analiza la cadena de operación y devuelve los números y operadores
@@ -29,10 +29,10 @@ public:
     }
 };
 
-// Clase que se encarga de realizar las operaciones matemáticas
+// clase para realizar las operaciones matematicas
 class Calculadora {
 public:
-    // Método que realiza la operación indicada
+    // verificaremos la operacion a realizar
     int operar(const vector<int>& numeros, const vector<char>& operadores) {
         int resultado = numeros[0];
 
@@ -65,14 +65,14 @@ public:
     }
 };
 
-// Clase que procesa la operación ingresada
+// clase que procesa la operación ingresada
 class Procesador {
 private:
     Analizador analizador;
     Calculadora calculadora;
 
 public:
-    // Método que procesa la cadena de operación
+    // metodo que procesa la cadena de operación
     void procesar(const string& operacion) {
         vector<int> numeros;
         vector<char> operadores;
