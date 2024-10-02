@@ -38,11 +38,11 @@ public:
 };
 
 int main() {
-    // Crear un objeto Mamifero
+    // crear un objeto Mamifero
     Mamifero mamifero;
     mamifero.Move();
 
-    // Crear un objeto Dog
+    // crear un objeto Dog
     Dog perro;
     perro.Move();
     perro.WagTail();
