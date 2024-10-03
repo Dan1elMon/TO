@@ -2,8 +2,23 @@
 #include <vector>
 #include <string>
 #include <map>
+#include <ctime>
 
 using namespace std;
+
+// Función para ingresar combinación de 3 números
+vector<int> ingresarCombinacion() {
+    vector<int> combinacion(3);
+    cout << "Ingrese 3 números entre 0 y 9 separados por espacio: ";
+    for (int i = 0; i < 3; ++i) {
+        cin >> combinacion[i];
+        while (combinacion[i] < 0 || combinacion[i] > 9) {
+            cout << "Número inválido, ingrese un número entre 0 y 9: ";
+            cin >> combinacion[i];
+        }
+    }
+    return combinacion;
+}
 
 // Clase base Cerrojo
 class Cerrojo {
@@ -24,10 +39,8 @@ protected:
     }
 
 public:
-    // Constructor que asigna una combinación inicial
     Cerrojo(const vector<int>& combinacionInicial) : combinacion(combinacionInicial) {}
 
-    // Método para abrir el cerrojo
     virtual bool abrir(const vector<int>& intento) {
         if (verificarCombinacion(intento)) {
             cout << "Cerrojo abierto." << endl;
@@ -38,7 +51,6 @@ public:
         }
     }
 
-    // Método para cambiar la combinación si se conoce la actual
     virtual bool cambiarCombinacion(const vector<int>& combinacionActual, const vector<int>& nuevaCombinacion) {
         if (verificarCombinacion(combinacionActual)) {
             combinacion = nuevaCombinacion;
@@ -49,12 +61,22 @@ public:
             return false;
         }
     }
+
+    vector<int> obtenerCombinacion() const {
+        return combinacion;
+    }
 };
 
-// Clase Director, con acceso completo
+// Clase Director, con acceso completo (verde)
 class Director : public Cerrojo {
 public:
     Director(const vector<int>& combinacionInicial) : Cerrojo(combinacionInicial) {}
+
+    // El director puede abrir el negocio sin ingresar combinación (acceso verde)
+    bool abrir(const vector<int>& intento) override {
+        cout << "Director tiene acceso verde. Cerrojo abierto sin combinación." << endl;
+        return true;
+    }
 
     bool cambiarCombinacion(const vector<int>& combinacionActual, const vector<int>& nuevaCombinacion) override {
         bool exito = Cerrojo::cambiarCombinacion(combinacionActual, nuevaCombinacion);
@@ -65,10 +87,16 @@ public:
     }
 };
 
-// Clase Gerencia, también con acceso completo
+// Clase Gerencia, también con acceso completo (verde)
 class Gerencia : public Cerrojo {
 public:
     Gerencia(const vector<int>& combinacionInicial) : Cerrojo(combinacionInicial) {}
+
+    // El gerente puede abrir el negocio sin ingresar combinación (acceso verde)
+    bool abrir(const vector<int>& intento) override {
+        cout << "Gerente tiene acceso verde. Cerrojo abierto sin combinación." << endl;
+        return true;
+    }
 
     bool cambiarCombinacion(const vector<int>& combinacionActual, const vector<int>& nuevaCombinacion) override {
         bool exito = Cerrojo::cambiarCombinacion(combinacionActual, nuevaCombinacion);
@@ -79,14 +107,14 @@ public:
     }
 };
 
-// Clase Empleado, con acceso limitado (consulta de estado)
+// Clase Empleado, con acceso limitado (rojo)
 class Empleado : public Cerrojo {
 private:
     Cerrojo* director;
     Cerrojo* gerente;
 
 public:
-    Empleado(const vector<int>& combinacionInicial, Cerrojo* dir, Cerrojo* ger) 
+    Empleado(const vector<int>& combinacionInicial, Cerrojo* dir, Cerrojo* ger)
         : Cerrojo(combinacionInicial), director(dir), gerente(ger) {}
 
     // Método que devuelve el estado de acceso del empleado (colores)
@@ -109,53 +137,94 @@ public:
     }
 };
 
-// Función para ingresar combinación de 3 números
-vector<int> ingresarCombinacion() {
-    vector<int> combinacion(3);
-    cout << "Ingrese 3 números entre 0 y 9 separados por espacio: ";
-    for (int i = 0; i < 3; ++i) {
-        cin >> combinacion[i];
-        // Validar que el número esté en el rango 0-9
-        while (combinacion[i] < 0 || combinacion[i] > 9) {
-            cout << "Número inválido, ingrese un número entre 0 y 9: ";
-            cin >> combinacion[i];
+// Clase para el negocio, manejando el estado de apertura
+class Negocio {
+private:
+    map<int, Cerrojo*> empleados;
+    bool abierto;
+    int diaActual;
+
+public:
+    Negocio(map<int, Cerrojo*>& empleados) : empleados(empleados), abierto(false), diaActual(1) {}
+
+    // Función para simular la apertura del negocio
+    void abrirNegocio(int id) {
+        auto it = empleados.find(id);
+        if (it == empleados.end()) {
+            cout << "Empleado no encontrado." << endl;
+            return;
+        }
+
+        Cerrojo* empleado = it->second;
+        
+        // Solo los empleados deben ingresar combinación
+        if (dynamic_cast<Empleado*>(empleado)) {
+            vector<int> intento = ingresarCombinacion();
+            if (empleado->abrir(intento)) {
+                cout << "Negocio abierto." << endl;
+                abierto = true;
+            } else {
+                cout << "No se pudo abrir el negocio." << endl;
+            }
+        } else {
+            // Director o gerente tienen acceso verde, no necesitan ingresar combinación
+            empleado->abrir({});
+            abierto = true;
         }
     }
-    return combinacion;
-}
 
-// Menú interactivo
-void menuInteractivo(map<int, Cerrojo*>& empleados, vector<int> combinacionInicial) {
-    int id;
-    int opcion;
-    vector<int> intento, nuevaCombinacion;
+    // Función para cambiar la clave diaria
+    void cambiarClaveDiaria() {
+        if (!abierto) {
+            cout << "El negocio está cerrado, no se puede cambiar la clave." << endl;
+            return;
+        }
 
-    cout << "Ingrese su ID de empleado: ";
-    cin >> id;
+        // Rotar la clave y asignarla al siguiente empleado
+        int id;
+        cout << "Ingrese su ID para cambiar la clave: ";
+        cin >> id;
 
-    auto it = empleados.find(id);
-    if (it == empleados.end()) {
-        cout << "Empleado no encontrado." << endl;
-        return;
+        auto it = empleados.find(id);
+        if (it == empleados.end()) {
+            cout << "Empleado no encontrado." << endl;
+            return;
+        }
+
+        Cerrojo* empleado = it->second;
+        cout << "Ingrese la nueva combinación: " << endl;
+        vector<int> nuevaCombinacion = ingresarCombinacion();
+        empleado->cambiarCombinacion(empleado->obtenerCombinacion(), nuevaCombinacion);
     }
 
-    Cerrojo* empleado = it->second;
+    // Simular el paso de un día
+    void siguienteDia() {
+        diaActual++;
+        cout << "Día " << diaActual << " ha comenzado. Recuerde cambiar la combinación." << endl;
+        abierto = false;  // El negocio se cierra automáticamente al final del día
+    }
+};
 
-    cout << "1. Abrir cerrojo\n2. Cambiar combinación\nElija una opción: ";
+// Menú interactivo
+void menuInteractivo(Negocio& negocio) {
+    int opcion, id;
+
+    cout << "1. Abrir negocio\n2. Cambiar clave diaria\n3. Siguiente día\nElija una opción: ";
     cin >> opcion;
 
-    if (opcion == 1) {
-        intento = ingresarCombinacion();
-        empleado->abrir(intento);
-    } else if (opcion == 2) {
-        cout << "Ingrese la combinación actual:\n";
-        intento = ingresarCombinacion();
-
-        cout << "Ingrese la nueva combinación:\n";
-        nuevaCombinacion = ingresarCombinacion();
-
-        empleado->cambiarCombinacion(intento, nuevaCombinacion);
-    } else {
+    switch (opcion) {
+    case 1:
+        cout << "Ingrese su ID de empleado: ";
+        cin >> id;
+        negocio.abrirNegocio(id);
+        break;
+    case 2:
+        negocio.cambiarClaveDiaria();
+        break;
+    case 3:
+        negocio.siguienteDia();
+        break;
+    default:
         cout << "Opción no válida." << endl;
     }
 }
@@ -163,21 +232,42 @@ void menuInteractivo(map<int, Cerrojo*>& empleados, vector<int> combinacionInici
 int main() {
     vector<int> combinacionInicial = {1, 2, 3};
 
-    // Crear empleados y director/gerente
+    // Crear empleados, director y gerente
     Director director(combinacionInicial);
     Gerencia gerente(combinacionInicial);
     Empleado empleado1(combinacionInicial, &director, &gerente);
     Empleado empleado2(combinacionInicial, &director, &gerente);
+    Empleado empleado3(combinacionInicial, &director, &gerente);
+    Empleado empleado4(combinacionInicial, &director, &gerente);
+    Empleado empleado5(combinacionInicial, &director, &gerente);
+    Empleado empleado6(combinacionInicial, &director, &gerente);
+    Empleado empleado7(combinacionInicial, &director, &gerente);
+    Empleado empleado8(combinacionInicial, &director, &gerente);
+    Empleado empleado9(combinacionInicial, &director, &gerente);
+    Empleado empleado10(combinacionInicial, &director, &gerente);
 
     // Mapa de empleados
     map<int, Cerrojo*> empleados;
-    empleados[1001] = &director;
-    empleados[1002] = &gerente;
+    empleados[0001] = &director;
+    empleados[0002] = &gerente;
     empleados[1003] = &empleado1;
+    empleados[1001] = &empleado2;
+    empleados[1002] = &empleado2;
+    empleados[1003] = &empleado2;
     empleados[1004] = &empleado2;
+    empleados[1005] = &empleado2;
+    empleados[1006] = &empleado2;
+    empleados[1007] = &empleado2;
+    empleados[1008] = &empleado2;
+    empleados[1009] = &empleado2;
+    empleados[1010] = &empleado2;
+
+
+    // Crear el negocio
+    Negocio negocio(empleados);
 
     while (true) {
-        menuInteractivo(empleados, combinacionInicial);
+        menuInteractivo(negocio);
         cout << endl;
     }
 
