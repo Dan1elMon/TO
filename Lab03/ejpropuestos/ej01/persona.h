@@ -1,18 +1,19 @@
-// persona.h
 #ifndef PERSONA_H
 #define PERSONA_H
 
 #include <string>
 #include <iostream>
 
+using namespace std;
+
 class Persona {
 protected:
-    std::string nombre;
+    string nombre;
     int edad;
 
 public:
-    Persona(const std::string &nom, int ed) : nombre(nom), edad(ed) {}
-    virtual void presentar() = 0; // Método virtual puro
+    Persona(string _nombre, int _edad);
+    virtual void mostrarInformacion();
 };
 
-#endif // PERSONA_H
+#endif

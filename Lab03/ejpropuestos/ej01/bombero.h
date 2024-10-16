@@ -1,15 +1,12 @@
-// bombero.h
 #ifndef BOMBERO_H
 #define BOMBERO_H
 
-#include "persona.h"
+#include "Persona.h"
 
 class Bombero : public Persona {
 public:
-    Bombero(const std::string &nom, int ed) : Persona(nom, ed) {}
-    void presentar() override {
-        std::cout << "Soy bombero. Mi nombre es " << nombre << " y tengo " << edad << " años.\n";
-    }
+    Bombero(string _nombre, int _edad);
+    void mostrarInformacion() override;
 };
 
-#endif // BOMBERO_H
+#endif

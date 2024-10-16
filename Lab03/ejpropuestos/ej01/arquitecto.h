@@ -1,15 +1,12 @@
-// arquitecto.h
 #ifndef ARQUITECTO_H
 #define ARQUITECTO_H
 
-#include "persona.h"
+#include "Persona.h"
 
 class Arquitecto : public Persona {
 public:
-    Arquitecto(const std::string &nom, int ed) : Persona(nom, ed) {}
-    void presentar() override {
-        std::cout << "Soy arquitecto. Mi nombre es " << nombre << " y tengo " << edad << " años.\n";
-    }
+    Arquitecto(string _nombre, int _edad);
+    void mostrarInformacion() override;
 };
 
-#endif // ARQUITECTO_H
+#endif

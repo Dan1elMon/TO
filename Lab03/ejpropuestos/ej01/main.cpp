@@ -1,18 +1,30 @@
-#include "arquitecto.h"
-#include "doctor.h"
-#include "enfermera.h"
-#include "bombero.h"
+#include "Arquitecto.h"
+#include "Doctor.h"
+#include "Enfermera.h"
+#include "Bombero.h"
 
-int main(int argc, char *argv[]) {
+int main() {
+    // Crear instancias de diferentes oficios
+    Arquitecto arq("Juan Carlo", 88);
+    Doctor doc("Marco", 44);
+    Enfermera enf("Elizabeth", 28);
+    Bombero bom("Olga", 56);
 
-    Arquitecto arq("Carlos", 30);
-    Doctor doc("Ana", 35);
-    Enfermera enf("Luis", 28);
-    Bombero bom("Sofía", 40);
+    // Mostrar información de cada persona
+    cout << "Información de personas por oficio:" << endl;
+    cout << "------------------------------" << endl;
+    
+    arq.mostrarInformacion();
+    cout << "------------------------------" << endl;
 
-    arq.presentar();
-    doc.presentar();
-    enf.presentar();
-    bom.presentar();
+    doc.mostrarInformacion();
+    cout << "------------------------------" << endl;
 
+    enf.mostrarInformacion();
+    cout << "------------------------------" << endl;
+
+    bom.mostrarInformacion();
+    cout << "------------------------------" << endl;
+
+    return 0;
 }
