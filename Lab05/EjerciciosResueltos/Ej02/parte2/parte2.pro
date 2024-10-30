@@ -10,10 +10,12 @@ CONFIG += c++17
 
 SOURCES += \
     main.cpp \
-    mainwindow.cpp
+    mainwindow.cpp \
+    synonymlist.cpp
 
 HEADERS += \
-    mainwindow.h
+    mainwindow.h \
+    synonymlist.h
 
 FORMS += \
     mainwindow.ui
