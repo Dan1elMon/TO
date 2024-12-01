@@ -6,7 +6,7 @@
 #include <thread>
 #include <mutex>
 #include <unordered_map>
-//#include <set>
+#include <algorithm> // Para std::sort
 
 struct Rating {
     int userId;
@@ -92,7 +92,7 @@ int main() {
     std::vector<std::thread> threads;
     int batchSize = userRatings.size() / numThreads;
 
-    //auto it = userRatings.begin();
+    // Usuarios Ratings
     for (int i = 0; i < numThreads; ++i) {
         int start = i * batchSize;
         int end = (i == numThreads - 1) ? userRatings.size() : (i + 1) * batchSize;
@@ -104,14 +104,18 @@ int main() {
         t.join();
     }
 
-    // Imprimir los primeros 5 resultados
-    for (int i = 0; i < 5 && i < distances.size(); ++i) {
+    // Ordenar por la menor distancia Euclídea
+    std::sort(distances.begin(), distances.end(), [](const auto &a, const auto &b) {
+        return a.second.second < b.second.second; // Ordena por distancia Euclídea
+    });
+
+    // Imprimir los 5 mejores resultados
+    for (int i = 0; i <20 && i < distances.size(); ++i) {
         auto &pair = distances[i];
-        std::cout << " Producto " << pair.first.second << ": "
+        std::cout << " Pelicula " << pair.first.first << " y Pelicula " << pair.first.second << ": "
                   << "Manhattan = " << pair.second.first
                   << ", Euclidea = " << pair.second.second << "\n";
     }
 
     return 0;
-    //asd
 }
