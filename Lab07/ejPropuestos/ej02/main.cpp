@@ -19,7 +19,7 @@ public:
     Cuenta(string titular, string tipoCuenta, double saldo = 0.0)
         : titular(titular), tipoCuenta(tipoCuenta), saldo(saldo) {}
 
-    virtual double calcularInteres() const = 0;  // Método virtual puro
+    virtual double calcularInteres() const = 0;  // Metodo virtual puro
 
     virtual void estadoDeCuenta() const {
         cout << "Tipo de Cuenta: " << tipoCuenta << "\nTitular: " << titular << "\nSaldo: " << saldo << endl;
@@ -73,10 +73,10 @@ public:
 class TarjetaCredito : public Cuenta {
 public:
     TarjetaCredito(string titular, double saldo)
-        : Cuenta(titular, "Tarjeta de Crédito", saldo) {}
+        : Cuenta(titular, "Tarjeta de Credito", saldo) {}
 
     double calcularInteres() const override {
-        return saldo * 0.20;  // 20% para tarjetas de crédito
+        return saldo * 0.20;  // 20% para tarjetas de credito
     }
 
     void realizarCompra(double monto) {
@@ -84,7 +84,7 @@ public:
     }
 };
 
-// Clase para representar un préstamo personal
+// Clase para representar un prestamo personal
 class Prestamo {
 public:
     double monto;
@@ -98,9 +98,9 @@ public:
     void evaluarPrestamo(function<bool(double)> calificacion) {
         aprobado = calificacion(monto);
         if (aprobado) {
-            mensajeAprobacion = "Préstamo aprobado por " + to_string(tasaInteres) + "% de interés.";
+            mensajeAprobacion = "Prestamo aprobado por " + to_string(tasaInteres) + "% de interes.";
         } else {
-            mensajeAprobacion = "Préstamo rechazado debido a las condiciones del cliente.";
+            mensajeAprobacion = "Prestamo rechazado debido a las condiciones del cliente.";
         }
     }
 
@@ -113,7 +113,7 @@ public:
     }
 };
 
-// Enumeración para tipo de firma en cuentas mancomunadas
+// Enumeracion para tipo de firma en cuentas mancomunadas
 enum TipoFirma {
     FIRMA_SIMPLE, // Cualquiera puede operar la cuenta
     FIRMA_CONJUNTA // Todos deben autorizar
@@ -155,11 +155,11 @@ public:
     }
 
     double calcularInteres() const override {
-        return saldo * 0.01;  // 1% de interés para cuentas mancomunadas
+        return saldo * 0.01;  // 1% de interes para cuentas mancomunadas
     }
 };
 
-// Función para calcular transferencia
+// Funcion para calcular transferencia
 double calcularTarifaTransferencia(const string& moneda, double monto) {
     if (moneda == "S/") {
         return monto * 0.02;  // Tarifa para soles: 2%
@@ -213,35 +213,35 @@ public:
     }
 
     bool calificarPrestamo(double monto) {
-        double tasaBase = 0.10;  // Tasa base de 10% para préstamos
+        double tasaBase = 0.10;  // Tasa base de 10% para prestamos
         string mensaje;
 
-        // Evaluación por puntaje de crédito
+        // Evaluacion por puntaje de credito
         if (puntajeCredito > 750) {
-            tasaBase -= 0.02;  // Descuento de 2% para buen crédito
+            tasaBase -= 0.02;  // Descuento de 2% para buen credito
         } else if (puntajeCredito < 600) {
-            tasaBase += 0.05;  // Aumento de 5% para mal crédito
-            mensaje += "Puntaje de crédito bajo, tasa de interés aumentada. ";
+            tasaBase += 0.05;  // Aumento de 5% para mal credito
+            mensaje += "Puntaje de credito bajo, tasa de interes aumentada. ";
         }
 
-        // Evaluación por deuda existente
+        // Evaluacion por deuda existente
         if (deudaExistente > 5000) {
             tasaBase += 0.03;  // Aumento de 3% si se tiene mucha deuda existente
-            mensaje += "Deuda existente alta, tasa de interés aumentada. ";
+            mensaje += "Deuda existente alta, tasa de interes aumentada. ";
         }
 
-        // Evaluación por ingresos mensuales
+        // Evaluacion por ingresos mensuales
         if (ingresosMensuales < 2000) {
             tasaBase += 0.02;  // Aumento de 2% si los ingresos son bajos
-            mensaje += "Ingresos bajos, tasa de interés aumentada. ";
+            mensaje += "Ingresos bajos, tasa de interes aumentada. ";
         }
 
-        // Evaluación por años de trabajo
+        // Evaluacion por años de trabajo
         if (anosDeTrabajo < 2) {
             tasaBase += 0.01;  // Aumento de 1% si los años de trabajo son bajos
-            mensaje += "Poco tiempo de trabajo, tasa de interés aumentada. ";
+            mensaje += "Poco tiempo de trabajo, tasa de interes aumentada. ";
         }
-
+ 
         Prestamo prestamo(monto, tasaBase);
         prestamo.evaluarPrestamo([&](double monto) -> bool {
             return monto <= 5000 && puntajeCredito > 600;
@@ -252,7 +252,7 @@ public:
     }
 };
 
-// Función para verificar login
+// Funcion para verificar login
 Cliente* login(vector<Cliente>& clientes) {
     string dni, clave;
     cout << "Ingrese DNI: ";
@@ -269,12 +269,12 @@ Cliente* login(vector<Cliente>& clientes) {
     return nullptr;
 }
 
-// Función para mostrar el menú
+// Funcion para mostrar el menú
 void mostrarMenu() {
     cout << "\n1. Ver estado de cuenta\n";
     cout << "2. Crear nueva cuenta\n";
     cout << "3. Solicitar tarjeta de credito\n";
-    cout << "4. Solicitar préstamo\n";
+    cout << "4. Solicitar prestamo\n";
     cout << "5. Hacer transferencia\n";
     cout << "6. Liquidar deuda\n";
     cout << "7. Salir\n";
@@ -291,7 +291,7 @@ int main() {
     // Login
     Cliente* clienteActual = login(clientes);
     if (clienteActual == nullptr) {
-        cout << "Error de autenticación. Saliendo...\n";
+        cout << "Error de autenticacion. Saliendo...\n";
         return 0;
     }
 
@@ -301,7 +301,7 @@ int main() {
     while (!salir) {
         mostrarMenu();
         int opcion;
-        cout << "Seleccione una opción: ";
+        cout << "Seleccione una opcion: ";
         cin >> opcion;
 
         switch (opcion) {
@@ -337,23 +337,23 @@ int main() {
             }
             case 3: {
                 double saldo;
-                cout << "Ingrese el saldo para la tarjeta de crédito: ";
+                cout << "Ingrese el saldo para la tarjeta de credito: ";
                 cin >> saldo;
 
                 shared_ptr<TarjetaCredito> nuevaTarjeta = make_shared<TarjetaCredito>(clienteActual->nombre, saldo);
                 clienteActual->agregarCuenta(nuevaTarjeta);
-                cout << "Tarjeta de crédito solicitada con saldo de " << saldo << endl;
+                cout << "Tarjeta de credito solicitada con saldo de " << saldo << endl;
                 break;
             }
             case 4: {
                 double monto;
-                cout << "Ingrese el monto del préstamo: ";
+                cout << "Ingrese el monto del prestamo: ";
                 cin >> monto;
 
                 if (clienteActual->calificarPrestamo(monto)) {
-                    cout << "Préstamo aprobado.\n";
+                    cout << "Prestamo aprobado.\n";
                 } else {
-                    cout << "Préstamo rechazado.\n";
+                    cout << "Prestamo rechazado.\n";
                 }
                 break;
             }
@@ -397,7 +397,7 @@ int main() {
                     for (auto& cuenta : destinatario->cuentas) {
                         cuenta->saldo += monto;  // Se agrega al saldo del destinatario
                     }
-                    cout << "Transferencia realizada con éxito.\n";
+                    cout << "Transferencia realizada con exito.\n";
                 } else {
                     cout << "Saldo insuficiente.\n";
                 }
@@ -418,7 +418,7 @@ int main() {
                 }
 
                 if (liquidado) {
-                    cout << "Deuda liquidada o adelantada con éxito.\n";
+                    cout << "Deuda liquidada o adelantada con exito.\n";
                 } else {
                     cout << "Saldo insuficiente para liquidar deuda.\n";
                 }
@@ -430,7 +430,7 @@ int main() {
                 break;
             }
             default:
-                cout << "Opción inválida.\n";
+                cout << "Opcion inválida.\n";
                 break;
         }
     }
