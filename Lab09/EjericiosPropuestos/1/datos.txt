@@ -1,0 +1,4 @@
+Ahorro,12345,Juan Perez,1500.50
+Credito,54321,Ana Lopez,2500.00
+Joven,98765,Pedro Garcia,1000.00
+Empresarial,67890,Carlos Ruiz,5000.00
